@@ -4,6 +4,7 @@ public static class Commands
 {
     private const string AddUsage = "certtrack add \"<title>\" --cert <cert> --domain <number>";
     private const string ListUsage = "certtrack list [--cert <cert>] [--status <status>]";
+    private const string StudyUsage = "certtrack study <id>";
     private const string DoneUsage = "certtrack done <id>";
 
     public static int Help()
@@ -15,6 +16,7 @@ public static class Commands
         Console.WriteLine("Commands:");
         Console.WriteLine("  add \"<title>\" --cert <cert> --domain <number>   Add an objective");
         Console.WriteLine("  list [--cert <cert>] [--status <status>]        List objectives");
+        Console.WriteLine("  study <id>                                      Mark an objective as studying");
         Console.WriteLine("  done <id>                                       Mark an objective as done");
         Console.WriteLine("  stats                                           Show percent done per domain");
         Console.WriteLine("  help                                            Show this help");
@@ -24,6 +26,7 @@ public static class Commands
         Console.WriteLine("Examples:");
         Console.WriteLine("  certtrack add \"1.1 Mobile device hardware\" --cert A+ --domain 1");
         Console.WriteLine("  certtrack list --cert A+ --status studying");
+        Console.WriteLine("  certtrack study 3");
         Console.WriteLine("  certtrack done 3");
         Console.WriteLine("  certtrack stats");
         return 0;
@@ -46,10 +49,14 @@ public static class Commands
             return Fail($"The domain must be a positive number, not '{domainText}'.", AddUsage);
 
         var objectives = store.Load();
+
+        // Reuse the spelling of a cert that is already stored, so "a+" and "A+" stay one cert.
+        var sameCert = objectives.Find(o => o.Cert.Equals(cert, StringComparison.OrdinalIgnoreCase));
+
         var objective = new Objective
         {
             Id = objectives.Count == 0 ? 1 : objectives.Max(o => o.Id) + 1,
-            Cert = cert,
+            Cert = sameCert?.Cert ?? cert,
             Domain = domain,
             Title = args[1]
         };
@@ -101,24 +108,34 @@ public static class Commands
         return 0;
     }
 
+    public static int Study(string[] args, ObjectiveStore store)
+    {
+        return SetStatus(args, store, Status.Studying, StudyUsage);
+    }
+
     public static int Done(string[] args, ObjectiveStore store)
     {
+        return SetStatus(args, store, Status.Done, DoneUsage);
+    }
+
+    private static int SetStatus(string[] args, ObjectiveStore store, Status status, string usage)
+    {
         if (args.Length < 2)
-            return Fail("Missing the objective id.", DoneUsage);
+            return Fail("Missing the objective id.", usage);
 
         if (!int.TryParse(args[1], out var id))
-            return Fail($"The id must be a number, not '{args[1]}'.", DoneUsage);
+            return Fail($"The id must be a number, not '{args[1]}'.", usage);
 
         var objectives = store.Load();
         var objective = objectives.Find(o => o.Id == id);
         if (objective is null)
             return Fail($"No objective with id {id}. Run 'certtrack list' to see the ids.");
 
-        objective.Status = Status.Done;
+        objective.Status = status;
         objective.LastReviewed = DateTime.Now;
         store.Save(objectives);
 
-        Ui.Success($"Done #{objective.Id}: {objective.Title}");
+        Ui.Success($"{status} #{objective.Id}: {objective.Title}");
         return 0;
     }
 

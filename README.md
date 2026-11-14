@@ -13,5 +13,6 @@ dotnet run -- list
 
 - `certtrack add "1.1 Mobile device hardware" --cert A+ --domain 1`
 - `certtrack list [--cert A+] [--status studying]`
+- `certtrack study <id>`
 - `certtrack done <id>`
 - `certtrack stats`

@@ -24,6 +24,8 @@ try
             return Commands.Add(args, store);
         case "list":
             return Commands.List(args, store);
+        case "study":
+            return Commands.Study(args, store);
         case "done":
             return Commands.Done(args, store);
         case "stats":

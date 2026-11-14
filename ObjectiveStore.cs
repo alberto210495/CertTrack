@@ -1,3 +1,4 @@
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -8,6 +9,8 @@ public class ObjectiveStore(string path = "objectives.json")
     private static readonly JsonSerializerOptions Options = new()
     {
         WriteIndented = true,
+        // Writes "A+" as-is instead of "A+". Safe here because the file is never embedded in HTML.
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
         Converters = { new JsonStringEnumConverter() }
     };
 
