@@ -8,11 +8,31 @@
 //   5. xUnit tests
 //   6. GitHub Actions: dotnet build + dotnet test
 
+using CertTrack;
+
+const string Usage = "Usage: certtrack <add|list|done|stats> [options]";
+
 if (args.Length == 0)
 {
     Console.WriteLine("certtrack - CompTIA study tracker");
-    Console.WriteLine("Usage: certtrack <add|list|done|stats> [options]");
-    return;
+    Console.WriteLine(Usage);
+    return 0;
 }
 
-Console.WriteLine($"Command '{args[0]}' is not implemented yet.");
+var store = new ObjectiveStore();
+
+switch (args[0])
+{
+    case "add":
+        return Commands.Add(args, store);
+    case "list":
+        return Commands.List(args, store);
+    case "done":
+        return Commands.Done(args, store);
+    case "stats":
+        return Commands.Stats(store);
+    default:
+        Console.WriteLine($"Unknown command '{args[0]}'.");
+        Console.WriteLine(Usage);
+        return 1;
+}
