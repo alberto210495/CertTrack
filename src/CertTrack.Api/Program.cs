@@ -59,6 +59,20 @@ using (var scope = app.Services.CreateScope())
 app.UseExceptionHandler();
 app.UseStatusCodePages();
 
+// Security headers on every response. The page may only load scripts and styles from this site.
+app.Use(async (context, next) =>
+{
+    context.Response.Headers.ContentSecurityPolicy =
+        "default-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'";
+    context.Response.Headers.XContentTypeOptions = "nosniff";
+    context.Response.Headers["Referrer-Policy"] = "no-referrer";
+    await next();
+});
+
+// Serves the front end in wwwroot. "/" returns index.html.
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
 app.UseAuthentication();
 app.UseAuthorization();
 

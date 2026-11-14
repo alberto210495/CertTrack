@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CertTrack</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header class="top">
+    <h1>CertTrack</h1>
+    <div id="session" class="session" hidden>
+      <span id="user-email"></span>
+      <button id="logout" type="button" class="quiet">Log out</button>
+    </div>
+  </header>
+
+  <main>
+    <p id="message" class="message" role="alert" hidden></p>
+
+    <section id="auth-view" class="card narrow" hidden>
+      <h2 id="auth-title">Log in</h2>
+      <form id="auth-form" class="stack">
+        <label>Email
+          <input id="auth-email" type="email" autocomplete="email" maxlength="254" required>
+        </label>
+        <label>Password
+          <input id="auth-password" type="password" autocomplete="current-password" maxlength="100" required>
+        </label>
+        <button id="auth-submit" type="submit">Log in</button>
+      </form>
+      <button id="auth-switch" type="button" class="link">Create an account instead</button>
+    </section>
+
+    <div id="app-view" hidden>
+      <section class="card">
+        <h2>Progress</h2>
+        <div id="stats"></div>
+      </section>
+
+      <section class="card">
+        <h2 id="form-title">Add an objective</h2>
+        <form id="objective-form" class="row">
+          <label class="grow">Title
+            <input id="objective-title" type="text" maxlength="200" required>
+          </label>
+          <label>Cert
+            <input id="objective-cert" type="text" maxlength="30" placeholder="A+" required>
+          </label>
+          <label>Domain
+            <input id="objective-domain" type="number" min="1" max="20" required>
+          </label>
+          <label>Status
+            <select id="objective-status">
+              <option value="NotStarted">Not started</option>
+              <option value="Studying">Studying</option>
+              <option value="Done">Done</option>
+            </select>
+          </label>
+          <div class="buttons">
+            <button id="objective-submit" type="submit">Add</button>
+            <button id="objective-cancel" type="button" class="quiet" hidden>Cancel</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="card">
+        <h2>Objectives</h2>
+        <div class="row">
+          <label>Cert
+            <select id="filter-cert">
+              <option value="">All</option>
+            </select>
+          </label>
+          <label>Status
+            <select id="filter-status">
+              <option value="">All</option>
+              <option value="NotStarted">Not started</option>
+              <option value="Studying">Studying</option>
+              <option value="Done">Done</option>
+            </select>
+          </label>
+        </div>
+        <div class="table-wrap">
+          <table id="objectives-table" hidden>
+            <thead>
+              <tr>
+                <th>Cert</th>
+                <th>Domain</th>
+                <th>Title</th>
+                <th>Status</th>
+                <th>Last reviewed</th>
+                <th aria-label="Actions"></th>
+              </tr>
+            </thead>
+            <tbody id="objectives"></tbody>
+          </table>
+        </div>
+        <p id="empty" class="muted" hidden>No objectives to show.</p>
+      </section>
+    </div>
+  </main>
+</body>
+</html>
