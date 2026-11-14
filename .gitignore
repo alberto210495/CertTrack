@@ -1,0 +1,15 @@
+# Build output
+bin/
+obj/
+
+# IDE
+.vs/
+.vscode/
+*.user
+
+# Local data
+objectives.json
+
+# OS
+Thumbs.db
+.DS_Store
