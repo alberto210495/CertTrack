@@ -5,6 +5,7 @@
     <Project Path="src/CertTrack.Core/CertTrack.Core.csproj" />
   </Folder>
   <Folder Name="/tests/">
+    <Project Path="tests/CertTrack.Api.Tests/CertTrack.Api.Tests.csproj" />
     <Project Path="tests/CertTrack.Tests/CertTrack.Tests.csproj" />
   </Folder>
 </Solution>
