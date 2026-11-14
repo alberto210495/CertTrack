@@ -1,8 +1,9 @@
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using CertTrack.Core;
 
-namespace CertTrack;
+namespace CertTrack.Cli;
 
 public class ObjectiveStore(string path = "objectives.json")
 {

@@ -23,10 +23,10 @@ You need the .NET 10 SDK. Run these from the repo root:
 
 ```
 dotnet build
-dotnet run --project src/CertTrack -- <command> [options]
+dotnet run --project src/CertTrack.Cli -- <command> [options]
 ```
 
-Everything after `--` is passed to CertTrack. The examples below write `certtrack` for short; during development that means `dotnet run --project src/CertTrack --`.
+Everything after `--` is passed to CertTrack. The examples below write `certtrack` for short; during development that means `dotnet run --project src/CertTrack.Cli --`.
 
 ## Commands
 

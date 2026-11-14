@@ -1,4 +1,6 @@
-namespace CertTrack;
+using CertTrack.Core;
+
+namespace CertTrack.Cli;
 
 public static class Commands
 {
@@ -49,14 +51,10 @@ public static class Commands
             return Fail($"The domain must be a positive number, not '{domainText}'.", AddUsage);
 
         var objectives = store.Load();
-
-        // Reuse the spelling of a cert that is already stored, so "a+" and "A+" stay one cert.
-        var sameCert = objectives.Find(o => o.Cert.Equals(cert, StringComparison.OrdinalIgnoreCase));
-
         var objective = new Objective
         {
             Id = objectives.Count == 0 ? 1 : objectives.Max(o => o.Id) + 1,
-            Cert = sameCert?.Cert ?? cert,
+            Cert = CertName.Resolve(objectives.Select(o => o.Cert), cert),
             Domain = domain,
             Title = args[1]
         };
@@ -131,8 +129,7 @@ public static class Commands
         if (objective is null)
             return Fail($"No objective with id {id}. Run 'certtrack list' to see the ids.");
 
-        objective.Status = status;
-        objective.LastReviewed = DateTime.Now;
+        objective.MoveTo(status, DateTime.Now);
         store.Save(objectives);
 
         Ui.Success($"{status} #{objective.Id}: {objective.Title}");

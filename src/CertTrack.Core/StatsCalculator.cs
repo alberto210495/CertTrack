@@ -1,4 +1,4 @@
-namespace CertTrack;
+namespace CertTrack.Core;
 
 public record DomainStats(string Cert, int Domain, int Done, int Total)
 {

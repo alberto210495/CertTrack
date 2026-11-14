@@ -1,4 +1,4 @@
-namespace CertTrack;
+namespace CertTrack.Core;
 
 public enum Status
 {
@@ -15,4 +15,12 @@ public class Objective
     public required string Title { get; set; }
     public Status Status { get; set; } = Status.NotStarted;
     public DateTime? LastReviewed { get; set; }
+
+    // Changes the status. Moving to Studying or Done counts as a review.
+    public void MoveTo(Status status, DateTime now)
+    {
+        Status = status;
+        if (status != Status.NotStarted)
+            LastReviewed = now;
+    }
 }

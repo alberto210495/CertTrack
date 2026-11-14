@@ -1,4 +1,4 @@
-namespace CertTrack;
+namespace CertTrack.Cli;
 
 public static class Ui
 {

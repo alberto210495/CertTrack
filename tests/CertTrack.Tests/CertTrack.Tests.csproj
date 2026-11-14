@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\CertTrack\CertTrack.csproj" />
+    <ProjectReference Include="..\..\src\CertTrack.Cli\CertTrack.Cli.csproj" />
   </ItemGroup>
 
 </Project>

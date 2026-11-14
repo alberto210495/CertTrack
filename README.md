@@ -5,8 +5,8 @@ A command-line study tracker for CompTIA exam objectives.
 ## Run
 
 ```
-dotnet run --project src/CertTrack
-dotnet run --project src/CertTrack -- list
+dotnet run --project src/CertTrack.Cli
+dotnet run --project src/CertTrack.Cli -- list
 ```
 
 ## Test

@@ -9,7 +9,7 @@
 //   6. GitHub Actions: dotnet build + dotnet test
 
 using System.Text.Json;
-using CertTrack;
+using CertTrack.Cli;
 
 if (args.Length == 0)
     return Commands.Help();

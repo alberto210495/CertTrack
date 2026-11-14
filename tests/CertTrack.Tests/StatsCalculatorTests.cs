@@ -1,3 +1,5 @@
+using CertTrack.Core;
+
 namespace CertTrack.Tests;
 
 public class StatsCalculatorTests

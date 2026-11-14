@@ -1,3 +1,6 @@
+using CertTrack.Cli;
+using CertTrack.Core;
+
 namespace CertTrack.Tests;
 
 public class CommandsTests : IDisposable

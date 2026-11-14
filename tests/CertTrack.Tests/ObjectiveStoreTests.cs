@@ -1,4 +1,6 @@
 using System.Text.Json;
+using CertTrack.Cli;
+using CertTrack.Core;
 
 namespace CertTrack.Tests;
 
