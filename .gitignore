@@ -9,6 +9,9 @@ obj/
 
 # Local data
 objectives.json
+*.db
+*.db-shm
+*.db-wal
 
 # OS
 Thumbs.db

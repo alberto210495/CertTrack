@@ -1,5 +1,6 @@
 <Solution>
   <Folder Name="/src/">
+    <Project Path="src/CertTrack.Api/CertTrack.Api.csproj" />
     <Project Path="src/CertTrack.Cli/CertTrack.Cli.csproj" />
     <Project Path="src/CertTrack.Core/CertTrack.Core.csproj" />
   </Folder>
