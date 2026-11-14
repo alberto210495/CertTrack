@@ -13,19 +13,20 @@ It is written in C# on .NET 10 and stores its data in one JSON file.
 - [How the code is organised](#how-the-code-is-organised)
 - [How each part works](#how-each-part-works)
 - [C# features used](#c-features-used)
+- [Tests](#tests)
 - [Known limitations](#known-limitations)
 - [Roadmap](#roadmap)
 
 ## Running it
 
-You need the .NET 10 SDK.
+You need the .NET 10 SDK. Run these from the repo root:
 
 ```
 dotnet build
-dotnet run -- <command> [options]
+dotnet run --project src/CertTrack -- <command> [options]
 ```
 
-Everything after `--` is passed to CertTrack. The examples below write `certtrack` for short; during development that means `dotnet run --`.
+Everything after `--` is passed to CertTrack. The examples below write `certtrack` for short; during development that means `dotnet run --project src/CertTrack --`.
 
 ## Commands
 
@@ -109,7 +110,7 @@ Usage: certtrack add "<title>" --cert <cert> --domain <number>
 
 ## The data file
 
-Objectives are stored in `objectives.json` in the folder you run the command from. With `dotnet run` that is the project folder. The file is listed in `.gitignore` because it is personal data.
+Objectives are stored in `objectives.json` in the folder you run the command from, which is normally the repo root. The file is listed in `.gitignore` because it is personal data.
 
 ```json
 [
@@ -136,6 +137,8 @@ Objectives are stored in `objectives.json` in the folder you run the command fro
 If the file does not exist, CertTrack treats it as an empty list and creates it on the first `add`.
 
 ## How the code is organised
+
+The repo holds one solution, `CertTrack.slnx`, with two projects: the app in `src/CertTrack/` and its tests in `tests/CertTrack.Tests/`. The app's files are:
 
 | File | Responsibility |
 |---|---|
@@ -196,19 +199,34 @@ Every command that changes data follows the same three steps: load the whole lis
 | Switch expression | `Commands.cs` | `StatusColor` maps each status to a colour |
 | Exception filter `when` | `Program.cs` | One `catch` handles two exception types |
 
+## Tests
+
+The tests use xUnit and live in `tests/CertTrack.Tests/`. Run them from the repo root:
+
+```
+dotnet test
+```
+
+| File | What it checks |
+|---|---|
+| `ObjectiveStoreTests.cs` | A missing file loads as an empty list, saved objectives load back unchanged, saving replaces the old content, the JSON is written in readable form, and a broken file throws |
+| `StatsCalculatorTests.cs` | Done and total counts per domain, studying not counting as done, certs kept separate, sort order, and the percentage |
+| `CommandsTests.cs` | `add` saving objectives with the next id and reusing cert spelling, `study` and `done` changing status, and bad input failing without changing the data |
+
+Each test that touches storage creates its own temporary file and deletes it afterwards, so tests never read or change a real `objectives.json`.
+
 ## Known limitations
 
 - There is no command to delete or edit an objective. To fix a mistake, edit `objectives.json` by hand.
 - The data file depends on the folder you run from. Running from a different folder starts a new, empty list.
 - Options that CertTrack does not know, such as `list --foo`, are ignored without a warning.
 - Domain numbers are not checked against the real exam. `--domain 99` is accepted.
-- There are no automated tests yet.
+- The tests do not check what the commands print, only what they save and the exit code they return.
 
 ## Roadmap
 
 Planned, not built yet:
 
-1. Unit tests with xUnit for storage and stats.
-2. A GitHub Actions workflow that runs `dotnet build` and `dotnet test` on every push.
-3. A fuller README with a screenshot of `stats`.
-4. A web version that reuses the model and stats logic: an ASP.NET Core API with SQLite, login, input validation and a simple front end.
+1. A GitHub Actions workflow that runs `dotnet build` and `dotnet test` on every push.
+2. A fuller README with a screenshot of `stats`.
+3. A web version that reuses the model and stats logic: an ASP.NET Core API with SQLite, login, input validation and a simple front end.
