@@ -8,31 +8,40 @@
 //   5. xUnit tests
 //   6. GitHub Actions: dotnet build + dotnet test
 
+using System.Text.Json;
 using CertTrack;
 
-const string Usage = "Usage: certtrack <add|list|done|stats> [options]";
-
 if (args.Length == 0)
-{
-    Console.WriteLine("certtrack - CompTIA study tracker");
-    Console.WriteLine(Usage);
-    return 0;
-}
+    return Commands.Help();
 
 var store = new ObjectiveStore();
 
-switch (args[0])
+try
 {
-    case "add":
-        return Commands.Add(args, store);
-    case "list":
-        return Commands.List(args, store);
-    case "done":
-        return Commands.Done(args, store);
-    case "stats":
-        return Commands.Stats(store);
-    default:
-        Console.WriteLine($"Unknown command '{args[0]}'.");
-        Console.WriteLine(Usage);
-        return 1;
+    switch (args[0])
+    {
+        case "add":
+            return Commands.Add(args, store);
+        case "list":
+            return Commands.List(args, store);
+        case "done":
+            return Commands.Done(args, store);
+        case "stats":
+            return Commands.Stats(store);
+        case "help" or "--help" or "-h":
+            return Commands.Help();
+        default:
+            Ui.Error($"Unknown command '{args[0]}'. Run 'certtrack help' to see the commands.");
+            return 1;
+    }
+}
+catch (JsonException)
+{
+    Ui.Error("objectives.json is not valid. Fix the file, or delete it to start over.");
+    return 1;
+}
+catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+{
+    Ui.Error($"Could not read or write objectives.json: {ex.Message}");
+    return 1;
 }
